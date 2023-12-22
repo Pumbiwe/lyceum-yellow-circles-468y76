@@ -1,25 +1,27 @@
 import random
 import sys
 
-from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 
 
 class Yellow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
+        self.resize(500, 500)
+
+        self.pushButton = QPushButton(self)
+
         self.pushButton.clicked.connect(self.drawCircle)
         self.circles = list()
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setPen(QPen(Qt.yellow, 3, Qt.SolidLine))
 
         for circle in self.circles:
-            painter.drawEllipse(*circle, circle[-1])
+            painter.setPen(QPen(circle[-1], 3, Qt.SolidLine))
+            painter.drawEllipse(*circle[:-1], circle[-2])
 
     def drawCircle(self):
         for i in range(2):
@@ -27,7 +29,8 @@ class Yellow(QMainWindow):
             self.circles.append(list([
                 random.randint(0, self.width() - r),
                 random.randint(0, self.height() - r),
-                r
+                r,
+                random.choice(list([Qt.red, Qt.white, Qt.black, Qt.yellow, Qt.green, Qt.blue]))
             ]))
         self.update()
 
